@@ -1,0 +1,29 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledJob
+metadata:
+  name: kubemq-batch-job
+spec:
+  jobTargetRef:
+    template:
+      spec:
+        containers:
+          - name: worker
+            image: my-batch-worker:latest
+            env:
+              - name: KUBEMQ_ADDRESS
+                value: kubemq.default.svc.cluster.local:50000
+              - name: QUEUE_NAME
+                value: batch-queue
+        restartPolicy: Never
+    backoffLimit: 3
+  pollingInterval: 10
+  maxReplicaCount: 50
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 3
+  triggers:
+    - type: external
+      metadata:
+        scalerAddress: <SCALER_SERVICE>.<NAMESPACE>.svc.cluster.local:9090
+        kubemqAddress: kubemq.default.svc.cluster.local:50000
+        queueName: batch-queue
+        targetWaiting: "1"

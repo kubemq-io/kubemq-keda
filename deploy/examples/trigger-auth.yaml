@@ -1,0 +1,17 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: kubemq-trigger-auth
+spec:
+  secretTargetRef:
+    - parameter: authToken
+      name: kubemq-auth-secret
+      key: token
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kubemq-auth-secret
+type: Opaque
+stringData:
+  token: "your-kubemq-auth-token"

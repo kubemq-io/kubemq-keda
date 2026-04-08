@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kubemq-keda-scaler.fullname" . }}
+  labels:
+    {{- include "kubemq-keda-scaler.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+  selector:
+    {{- include "kubemq-keda-scaler.selectorLabels" . | nindent 4 }}

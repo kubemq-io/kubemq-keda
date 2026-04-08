@@ -1,0 +1,19 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: scale-to-zero-scaler
+spec:
+  scaleTargetRef:
+    name: batch-processor
+  pollingInterval: 10
+  cooldownPeriod: 120
+  minReplicaCount: 0
+  maxReplicaCount: 5
+  triggers:
+    - type: external-push
+      metadata:
+        scalerAddress: <SCALER_SERVICE>.<NAMESPACE>.svc.cluster.local:9090
+        kubemqAddress: kubemq.default.svc.cluster.local:50000
+        queueName: batch-jobs
+        targetWaiting: "1"
+        activationTargetWaiting: "0"

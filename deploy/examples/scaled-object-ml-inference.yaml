@@ -1,0 +1,22 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: ml-inference-scaler
+spec:
+  scaleTargetRef:
+    name: gpu-inference-worker
+  pollingInterval: 5
+  cooldownPeriod: 300
+  minReplicaCount: 0
+  maxReplicaCount: 20
+  fallback:
+    failureThreshold: 3
+    replicas: 2
+  triggers:
+    - type: external
+      metadata:
+        scalerAddress: <SCALER_SERVICE>.<NAMESPACE>.svc.cluster.local:9090
+        kubemqAddress: kubemq.default.svc.cluster.local:50000
+        queueName: inference-requests
+        targetWaiting: "5"
+        activationTargetWaiting: "1"

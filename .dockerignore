@@ -1,0 +1,12 @@
+.git
+.idea
+.github
+*.out
+coverage*
+deploy/
+README.md
+CHANGELOG.md
+LICENSE
+Makefile
+.dockerignore
+.gitignore
